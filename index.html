@@ -28,23 +28,51 @@ body{
 .container{
  background:rgba(255,255,255,0.15);
  backdrop-filter:blur(18px);
- padding:30px;border-radius:30px;
- width:95%;max-width:650px;text-align:center;
+ padding:35px;
+ border-radius:30px;
+ width:95%;
+ max-width:650px;
+ text-align:center;
 }
 
-h1{font-family:'Great Vibes';font-size:46px;margin:0}
-#countdown{font-size:36px;font-weight:700;margin:10px}
+/* BIG BEAUTIFUL TEXT */
+h1{
+ font-family:'Great Vibes';
+ font-size:60px;
+ margin:5px 0 10px;
+}
 
+#countdown{
+ font-size:44px;
+ font-weight:700;
+ margin:15px 0 20px;
+ letter-spacing:1px;
+}
+
+/* BIG ROMANTIC BUTTON */
 button{
- padding:14px 30px;border:none;border-radius:50px;
- font-weight:700;margin:8px;
+ padding:18px 36px;
+ border:none;
+ border-radius:60px;
+ font-weight:700;
+ font-size:18px;
+ margin:12px;
  background:linear-gradient(90deg,#ff4f81,#ff7eb3);
- color:white;cursor:pointer;
+ color:white;
+ cursor:pointer;
  animation:fadeBtn .8s ease;
+ box-shadow:0 0 20px rgba(255,0,102,.6);
 }
 @keyframes fadeBtn{from{opacity:0;transform:scale(.8)}to{opacity:1}}
 
-.quote{margin-top:15px;font-size:18px;font-weight:600}
+.quote{
+ margin-top:25px;
+ font-size:24px;
+ font-weight:600;
+ line-height:1.5;
+ padding:0 15px;
+}
+
 video{display:none}
 </style>
 </head>
@@ -61,6 +89,7 @@ video{display:none}
 </div>
 
 <script>
+// countdown
 const birthday=new Date("Feb 20, 2026").getTime();
 setInterval(()=>{
  const gap=birthday-new Date().getTime();
@@ -76,6 +105,7 @@ const btnArea=document.getElementById("buttons");
 const video=document.getElementById("video");
 
 const videos={17:"day1.mp4",18:"day2.mp4",19:"day3.mp4",20:"birthday.mp4"};
+
 const quotes={
 17:"For all the things my hands have held, the best by far is you 💖",
 18:"I love you not only for who you are, but also for who I become when I am with you 💕",
@@ -111,12 +141,11 @@ function playBirthday(){
  quote.innerHTML=quotes[20];
 }
 
-// AFTER VIDEO ENDS
+// After video ends return back
 video.onended=function(){
  if(document.fullscreenElement) document.exitFullscreen();
  video.style.display="none";
 
- // After bonus ends on 17 → show today's surprise button
  if(today==17 && video.src.includes("welcome.mp4")){
    btnArea.innerHTML=`<button onclick="playToday()">💖 Today's Surprise</button>`;
  }
