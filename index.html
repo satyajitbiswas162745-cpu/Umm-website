@@ -25,111 +25,60 @@ body{
 100%{background-position:0% 50%}
 }
 
-/* floating hearts */
-.particle{
- position:absolute;
- bottom:-20px;
- font-size:18px;
- animation:float 7s linear infinite;
- opacity:.6;
-}
-@keyframes float{
- from{transform:translateY(0)}
- to{transform:translateY(-110vh);opacity:0}
-}
-
 .container{
  background:rgba(255,255,255,0.15);
  backdrop-filter:blur(18px);
- padding:30px;
- border-radius:30px;
- width:95%;
- max-width:650px;
- text-align:center;
- box-shadow:0 0 40px rgba(0,0,0,.2);
+ padding:30px;border-radius:30px;
+ width:95%;max-width:650px;text-align:center;
 }
 
 h1{font-family:'Great Vibes';font-size:46px;margin:0}
 #countdown{font-size:36px;font-weight:700;margin:10px}
 
 button{
- padding:14px 30px;
- border:none;border-radius:50px;
+ padding:14px 30px;border:none;border-radius:50px;
  font-weight:700;margin:8px;
  background:linear-gradient(90deg,#ff4f81,#ff7eb3);
  color:white;cursor:pointer;
- box-shadow:0 0 20px rgba(255,0,102,.6);
- transition:.3s;
-}
-button:hover{transform:scale(1.08)}
-
-.quote{
- margin-top:15px;
- font-size:18px;
- font-weight:600;
- min-height:50px;
 }
 
-/* 🎬 PORTRAIT VIDEO FRAME */
-.videoBox{
- display:none;
- margin-top:18px;
- justify-content:center;
- animation:fadeIn 1.2s;
-}
-video{
- width:280px;
- height:500px;
- object-fit:contain;
- border-radius:22px;
- box-shadow:0 20px 40px rgba(0,0,0,.35);
- background:black;
-}
-@media(max-width:700px){
- video{width:240px;height:430px;}
-}
-@media(max-width:500px){
- video{width:200px;height:360px;}
-}
+.previewPanel{display:none;margin-bottom:10px}
+select{padding:6px;border-radius:10px;border:none}
 
-@keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1}}
-
-.sparkle{
- position:absolute;
- font-size:20px;
- animation:spark 1s linear forwards;
-}
-@keyframes spark{
- from{opacity:1;transform:translateY(0)}
- to{opacity:0;transform:translateY(-80px)}
-}
+.quote{margin-top:15px;font-size:18px;font-weight:600}
+video{display:none}
 </style>
 </head>
 
 <body>
-
 <div class="container">
 <h1>For My Love ❤️</h1>
-<div id="countdown"></div>
 
+<div class="previewPanel" id="previewPanel">
+Preview Day:
+<select onchange="setPreview(this.value)">
+<option value="17">17 Feb</option>
+<option value="18">18 Feb</option>
+<option value="19">19 Feb</option>
+<option value="20">20 Feb 🎂</option>
+</select>
+</div>
+
+<div id="countdown"></div>
 <div id="buttons"></div>
 <div class="quote" id="quote"></div>
 
-<div class="videoBox" id="videoBox">
-   <video id="video" controls></video>
-</div>
+<video id="video" controls playsinline></video>
 </div>
 
 <script>
-// floating hearts bg
-setInterval(()=>{
- const h=document.createElement("div");
- h.className="particle";
- h.innerHTML=Math.random()>0.5?"❤":"✨";
- h.style.left=Math.random()*100+"vw";
- document.body.appendChild(h);
- setTimeout(()=>h.remove(),7000);
-},600);
+// preview mode
+const params=new URLSearchParams(window.location.search);
+let forcedDay=null;
+if(params.get("preview")=="true"){
+ document.getElementById("previewPanel").style.display="block";
+}
+function setPreview(day){forcedDay=day;location.reload();}
 
 // countdown
 const birthday=new Date("Feb 20, 2026").getTime();
@@ -142,7 +91,7 @@ setInterval(()=>{
  countdown.innerHTML=`${d}d ${h}h ${m}m ${s}s`;
 },1000);
 
-const today=new Date().getDate();
+const today=forcedDay || new Date().getDate();
 const btnArea=document.getElementById("buttons");
 
 const videos={
@@ -159,37 +108,17 @@ const quotes={
 20:"With you, I don't count time, I feel it. Happy birthday to the one who makes love feel both quiet and infinite 🎂❤️"
 };
 
-function sparkles(){
- for(let i=0;i<20;i++){
-  const s=document.createElement("div");
-  s.className="sparkle";
-  s.innerHTML="✨";
-  s.style.left=Math.random()*100+"vw";
-  s.style.top=Math.random()*100+"vh";
-  document.body.appendChild(s);
-  setTimeout(()=>s.remove(),1000);
- }
+function playFullscreen(src){
+ const v=document.getElementById("video");
+ v.src=src;
+ v.style.display="block";
+ v.play();
+
+ if(v.requestFullscreen) v.requestFullscreen();
 }
 
-function typeQuote(text){
- quote.innerHTML="";
- let i=0;
- const typing=setInterval(()=>{
-   quote.innerHTML+=text[i];
-   i++;
-   if(i>=text.length) clearInterval(typing);
- },35);
-}
-
-function showVideo(src){
- sparkles();
- video.src=src;
- videoBox.style.display="flex";
-}
-
-// buttons logic
 if(today==17){
- btnArea.innerHTML+=`<button onclick="showVideo('welcome.mp4')">🎁 Bonus Video</button>`;
+ btnArea.innerHTML+=`<button onclick="playFullscreen('welcome.mp4')">🎁 Bonus Video</button>`;
 }
 if(today>=17 && today<=19){
  btnArea.innerHTML+=`<button onclick="playToday()">💖 Today's Surprise</button>`;
@@ -199,15 +128,14 @@ if(today==20){
 }
 
 function playToday(){
- showVideo(videos[today]);
- typeQuote(quotes[today]);
+ playFullscreen(videos[today]);
+ quote.innerHTML=quotes[today];
 }
 
 function playBirthday(){
- showVideo(videos[20]);
- typeQuote(quotes[20]);
+ playFullscreen(videos[20]);
+ quote.innerHTML=quotes[20];
 }
 </script>
-
 </body>
 </html>
