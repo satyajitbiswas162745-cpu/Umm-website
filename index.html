@@ -40,7 +40,9 @@ button{
  font-weight:700;margin:8px;
  background:linear-gradient(90deg,#ff4f81,#ff7eb3);
  color:white;cursor:pointer;
+ animation:fadeBtn .8s ease;
 }
+@keyframes fadeBtn{from{opacity:0;transform:scale(.8)}to{opacity:1}}
 
 .quote{margin-top:15px;font-size:18px;font-weight:600}
 video{display:none}
@@ -59,7 +61,6 @@ video{display:none}
 </div>
 
 <script>
-// countdown
 const birthday=new Date("Feb 20, 2026").getTime();
 setInterval(()=>{
  const gap=birthday-new Date().getTime();
@@ -74,13 +75,7 @@ const today=new Date().getDate();
 const btnArea=document.getElementById("buttons");
 const video=document.getElementById("video");
 
-const videos={
-17:"day1.mp4",
-18:"day2.mp4",
-19:"day3.mp4",
-20:"birthday.mp4"
-};
-
+const videos={17:"day1.mp4",18:"day2.mp4",19:"day3.mp4",20:"birthday.mp4"};
 const quotes={
 17:"For all the things my hands have held, the best by far is you 💖",
 18:"I love you not only for who you are, but also for who I become when I am with you 💕",
@@ -95,17 +90,16 @@ function playFullscreen(src){
  if(video.requestFullscreen) video.requestFullscreen();
 }
 
-// buttons
-function loadButtons(afterBonus=false){
- btnArea.innerHTML="";
- if(today==17 && !afterBonus)
-   btnArea.innerHTML+=`<button onclick="playFullscreen('welcome.mp4')">🎁 Bonus Video</button>`;
- if(today>=17 && today<=19)
-   btnArea.innerHTML+=`<button onclick="playToday()">💖 Today's Surprise</button>`;
- if(today==20)
-   btnArea.innerHTML+=`<button onclick="playBirthday()">🎂 Birthday Video</button>`;
+// INITIAL BUTTONS
+if(today==17){
+ btnArea.innerHTML=`<button onclick="playFullscreen('welcome.mp4')">🎁 Bonus Video</button>`;
 }
-loadButtons();
+if(today>=18 && today<=19){
+ btnArea.innerHTML=`<button onclick="playToday()">💖 Today's Surprise</button>`;
+}
+if(today==20){
+ btnArea.innerHTML=`<button onclick="playBirthday()">🎂 Birthday Video</button>`;
+}
 
 function playToday(){
  playFullscreen(videos[today]);
@@ -117,14 +111,14 @@ function playBirthday(){
  quote.innerHTML=quotes[20];
 }
 
-// 🎬 AUTO RETURN AFTER VIDEO ENDS
-video.onended = function(){
+// AFTER VIDEO ENDS
+video.onended=function(){
  if(document.fullscreenElement) document.exitFullscreen();
  video.style.display="none";
 
- // after bonus video on 17 → remove bonus button
+ // After bonus ends on 17 → show today's surprise button
  if(today==17 && video.src.includes("welcome.mp4")){
-   loadButtons(true);
+   btnArea.innerHTML=`<button onclick="playToday()">💖 Today's Surprise</button>`;
  }
 };
 </script>
