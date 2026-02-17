@@ -42,9 +42,6 @@ button{
  color:white;cursor:pointer;
 }
 
-.previewPanel{display:none;margin-bottom:10px}
-select{padding:6px;border-radius:10px;border:none}
-
 .quote{margin-top:15px;font-size:18px;font-weight:600}
 video{display:none}
 </style>
@@ -53,18 +50,8 @@ video{display:none}
 <body>
 <div class="container">
 <h1>For My Love ❤️</h1>
-
-<div class="previewPanel" id="previewPanel">
-Preview Day:
-<select onchange="setPreview(this.value)">
-<option value="17">17 Feb</option>
-<option value="18">18 Feb</option>
-<option value="19">19 Feb</option>
-<option value="20">20 Feb 🎂</option>
-</select>
-</div>
-
 <div id="countdown"></div>
+
 <div id="buttons"></div>
 <div class="quote" id="quote"></div>
 
@@ -72,14 +59,6 @@ Preview Day:
 </div>
 
 <script>
-// preview mode
-const params=new URLSearchParams(window.location.search);
-let forcedDay=null;
-if(params.get("preview")=="true"){
- document.getElementById("previewPanel").style.display="block";
-}
-function setPreview(day){forcedDay=day;location.reload();}
-
 // countdown
 const birthday=new Date("Feb 20, 2026").getTime();
 setInterval(()=>{
@@ -91,8 +70,9 @@ setInterval(()=>{
  countdown.innerHTML=`${d}d ${h}h ${m}m ${s}s`;
 },1000);
 
-const today=forcedDay || new Date().getDate();
+const today=new Date().getDate();
 const btnArea=document.getElementById("buttons");
+const video=document.getElementById("video");
 
 const videos={
 17:"day1.mp4",
@@ -109,23 +89,23 @@ const quotes={
 };
 
 function playFullscreen(src){
- const v=document.getElementById("video");
- v.src=src;
- v.style.display="block";
- v.play();
-
- if(v.requestFullscreen) v.requestFullscreen();
+ video.src=src;
+ video.style.display="block";
+ video.play();
+ if(video.requestFullscreen) video.requestFullscreen();
 }
 
-if(today==17){
- btnArea.innerHTML+=`<button onclick="playFullscreen('welcome.mp4')">🎁 Bonus Video</button>`;
+// buttons
+function loadButtons(afterBonus=false){
+ btnArea.innerHTML="";
+ if(today==17 && !afterBonus)
+   btnArea.innerHTML+=`<button onclick="playFullscreen('welcome.mp4')">🎁 Bonus Video</button>`;
+ if(today>=17 && today<=19)
+   btnArea.innerHTML+=`<button onclick="playToday()">💖 Today's Surprise</button>`;
+ if(today==20)
+   btnArea.innerHTML+=`<button onclick="playBirthday()">🎂 Birthday Video</button>`;
 }
-if(today>=17 && today<=19){
- btnArea.innerHTML+=`<button onclick="playToday()">💖 Today's Surprise</button>`;
-}
-if(today==20){
- btnArea.innerHTML+=`<button onclick="playBirthday()">🎂 Birthday Video</button>`;
-}
+loadButtons();
 
 function playToday(){
  playFullscreen(videos[today]);
@@ -136,6 +116,17 @@ function playBirthday(){
  playFullscreen(videos[20]);
  quote.innerHTML=quotes[20];
 }
+
+// 🎬 AUTO RETURN AFTER VIDEO ENDS
+video.onended = function(){
+ if(document.fullscreenElement) document.exitFullscreen();
+ video.style.display="none";
+
+ // after bonus video on 17 → remove bonus button
+ if(today==17 && video.src.includes("welcome.mp4")){
+   loadButtons(true);
+ }
+};
 </script>
 </body>
 </html>
