@@ -25,7 +25,7 @@ body{
 100%{background-position:0% 50%}
 }
 
-/* floating hearts background */
+/* floating hearts */
 .particle{
  position:absolute;
  bottom:-20px;
@@ -47,14 +47,11 @@ body{
  max-width:650px;
  text-align:center;
  box-shadow:0 0 40px rgba(0,0,0,.2);
- animation:fadeCard 2s ease;
 }
-@keyframes fadeCard{from{opacity:0;transform:scale(.95)}to{opacity:1}}
 
 h1{font-family:'Great Vibes';font-size:46px;margin:0}
 #countdown{font-size:36px;font-weight:700;margin:10px}
 
-/* glowing romantic button */
 button{
  padding:14px 30px;
  border:none;border-radius:50px;
@@ -73,11 +70,30 @@ button:hover{transform:scale(1.08)}
  min-height:50px;
 }
 
-.videoBox{display:none;margin-top:15px;animation:fadeIn 1.2s}
-video{width:100%;border-radius:20px}
+/* 🎬 PORTRAIT VIDEO FRAME */
+.videoBox{
+ display:none;
+ margin-top:18px;
+ justify-content:center;
+ animation:fadeIn 1.2s;
+}
+video{
+ width:280px;
+ height:500px;
+ object-fit:contain;
+ border-radius:22px;
+ box-shadow:0 20px 40px rgba(0,0,0,.35);
+ background:black;
+}
+@media(max-width:700px){
+ video{width:240px;height:430px;}
+}
+@media(max-width:500px){
+ video{width:200px;height:360px;}
+}
+
 @keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1}}
 
-/* sparkle burst */
 .sparkle{
  position:absolute;
  font-size:20px;
@@ -105,16 +121,15 @@ video{width:100%;border-radius:20px}
 </div>
 
 <script>
-// floating hearts background
+// floating hearts bg
 setInterval(()=>{
  const h=document.createElement("div");
  h.className="particle";
  h.innerHTML=Math.random()>0.5?"❤":"✨";
  h.style.left=Math.random()*100+"vw";
- h.style.fontSize=Math.random()*20+10+"px";
  document.body.appendChild(h);
  setTimeout(()=>h.remove(),7000);
-},500);
+},600);
 
 // countdown
 const birthday=new Date("Feb 20, 2026").getTime();
@@ -130,7 +145,13 @@ setInterval(()=>{
 const today=new Date().getDate();
 const btnArea=document.getElementById("buttons");
 
-const videos={17:"day1.mp4",18:"day2.mp4",19:"day3.mp4",20:"birthday.mp4"};
+const videos={
+17:"day1.mp4",
+18:"day2.mp4",
+19:"day3.mp4",
+20:"birthday.mp4"
+};
+
 const quotes={
 17:"For all the things my hands have held, the best by far is you 💖",
 18:"I love you not only for who you are, but also for who I become when I am with you 💕",
@@ -138,7 +159,6 @@ const quotes={
 20:"With you, I don't count time, I feel it. Happy birthday to the one who makes love feel both quiet and infinite 🎂❤️"
 };
 
-// sparkle click effect
 function sparkles(){
  for(let i=0;i<20;i++){
   const s=document.createElement("div");
@@ -151,7 +171,6 @@ function sparkles(){
  }
 }
 
-// typewriter quote animation
 function typeQuote(text){
  quote.innerHTML="";
  let i=0;
@@ -159,13 +178,13 @@ function typeQuote(text){
    quote.innerHTML+=text[i];
    i++;
    if(i>=text.length) clearInterval(typing);
- },40);
+ },35);
 }
 
 function showVideo(src){
  sparkles();
  video.src=src;
- videoBox.style.display="block";
+ videoBox.style.display="flex";
 }
 
 // buttons logic
@@ -189,5 +208,6 @@ function playBirthday(){
  typeQuote(quotes[20]);
 }
 </script>
+
 </body>
 </html>
