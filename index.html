@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>For My Love ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+body{
+ margin:0;
+ font-family:Poppins;
+ height:100vh;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ overflow:hidden;
+ color:white;
+ background:linear-gradient(-45deg,#ff7eb3,#ff758c,#ff9a9e,#fad0c4);
+ background-size:400% 400%;
+ animation:gradient 14s ease infinite;
+}
+@keyframes gradient{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* floating hearts background */
+.particle{
+ position:absolute;
+ bottom:-20px;
+ font-size:18px;
+ animation:float 7s linear infinite;
+ opacity:.6;
+}
+@keyframes float{
+ from{transform:translateY(0)}
+ to{transform:translateY(-110vh);opacity:0}
+}
+
+.container{
+ background:rgba(255,255,255,0.15);
+ backdrop-filter:blur(18px);
+ padding:30px;
+ border-radius:30px;
+ width:95%;
+ max-width:650px;
+ text-align:center;
+ box-shadow:0 0 40px rgba(0,0,0,.2);
+ animation:fadeCard 2s ease;
+}
+@keyframes fadeCard{from{opacity:0;transform:scale(.95)}to{opacity:1}}
+
+h1{font-family:'Great Vibes';font-size:46px;margin:0}
+#countdown{font-size:36px;font-weight:700;margin:10px}
+
+/* glowing romantic button */
+button{
+ padding:14px 30px;
+ border:none;border-radius:50px;
+ font-weight:700;margin:8px;
+ background:linear-gradient(90deg,#ff4f81,#ff7eb3);
+ color:white;cursor:pointer;
+ box-shadow:0 0 20px rgba(255,0,102,.6);
+ transition:.3s;
+}
+button:hover{transform:scale(1.08)}
+
+.quote{
+ margin-top:15px;
+ font-size:18px;
+ font-weight:600;
+ min-height:50px;
+}
+
+.videoBox{display:none;margin-top:15px;animation:fadeIn 1.2s}
+video{width:100%;border-radius:20px}
+@keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1}}
+
+/* sparkle burst */
+.sparkle{
+ position:absolute;
+ font-size:20px;
+ animation:spark 1s linear forwards;
+}
+@keyframes spark{
+ from{opacity:1;transform:translateY(0)}
+ to{opacity:0;transform:translateY(-80px)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>For My Love ❤️</h1>
+<div id="countdown"></div>
+
+<div id="buttons"></div>
+<div class="quote" id="quote"></div>
+
+<div class="videoBox" id="videoBox">
+   <video id="video" controls></video>
+</div>
+</div>
+
+<script>
+// floating hearts background
+setInterval(()=>{
+ const h=document.createElement("div");
+ h.className="particle";
+ h.innerHTML=Math.random()>0.5?"❤":"✨";
+ h.style.left=Math.random()*100+"vw";
+ h.style.fontSize=Math.random()*20+10+"px";
+ document.body.appendChild(h);
+ setTimeout(()=>h.remove(),7000);
+},500);
+
+// countdown
+const birthday=new Date("Feb 20, 2026").getTime();
+setInterval(()=>{
+ const gap=birthday-new Date().getTime();
+ const d=Math.floor(gap/(1000*60*60*24));
+ const h=Math.floor((gap%(1000*60*60*24))/(1000*60*60));
+ const m=Math.floor((gap%(1000*60*60))/(1000*60));
+ const s=Math.floor((gap%(1000*60))/1000);
+ countdown.innerHTML=`${d}d ${h}h ${m}m ${s}s`;
+},1000);
+
+const today=new Date().getDate();
+const btnArea=document.getElementById("buttons");
+
+const videos={17:"day1.mp4",18:"day2.mp4",19:"day3.mp4",20:"birthday.mp4"};
+const quotes={
+17:"For all the things my hands have held, the best by far is you 💖",
+18:"I love you not only for who you are, but also for who I become when I am with you 💕",
+19:"You think you're one of millions but you're one in a million to me! ILU! 💘",
+20:"With you, I don't count time, I feel it. Happy birthday to the one who makes love feel both quiet and infinite 🎂❤️"
+};
+
+// sparkle click effect
+function sparkles(){
+ for(let i=0;i<20;i++){
+  const s=document.createElement("div");
+  s.className="sparkle";
+  s.innerHTML="✨";
+  s.style.left=Math.random()*100+"vw";
+  s.style.top=Math.random()*100+"vh";
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),1000);
+ }
+}
+
+// typewriter quote animation
+function typeQuote(text){
+ quote.innerHTML="";
+ let i=0;
+ const typing=setInterval(()=>{
+   quote.innerHTML+=text[i];
+   i++;
+   if(i>=text.length) clearInterval(typing);
+ },40);
+}
+
+function showVideo(src){
+ sparkles();
+ video.src=src;
+ videoBox.style.display="block";
+}
+
+// buttons logic
+if(today==17){
+ btnArea.innerHTML+=`<button onclick="showVideo('welcome.mp4')">🎁 Bonus Video</button>`;
+}
+if(today>=17 && today<=19){
+ btnArea.innerHTML+=`<button onclick="playToday()">💖 Today's Surprise</button>`;
+}
+if(today==20){
+ btnArea.innerHTML+=`<button onclick="playBirthday()">🎂 Birthday Video</button>`;
+}
+
+function playToday(){
+ showVideo(videos[today]);
+ typeQuote(quotes[today]);
+}
+
+function playBirthday(){
+ showVideo(videos[20]);
+ typeQuote(quotes[20]);
+}
+</script>
+</body>
+</html>
